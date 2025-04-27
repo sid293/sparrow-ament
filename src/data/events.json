@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Daily Standup",
+    "date": "2024-01-27",
+    "startTime": "00:00",
+    "endTime": "01:30",
+    "color": "#f6be23"
+  },
+  {
+    "id": 2,
+    "title": "Weekly Catchup",
+    "date": "2024-01-27",
+    "startTime": "04:30",
+    "endTime": "07:30",
+    "color": "#f6501e"
+  },
+  {
+    "id": 3,
+    "title": "Team Meeting",
+    "date": "2024-01-28",
+    "startTime": "14:00",
+    "endTime": "15:30",
+    "color": "#4287f5"
+  },
+  {
+    "id": 4,
+    "title": "Project Review",
+    "date": "2024-01-29",
+    "startTime": "10:00",
+    "endTime": "11:30",
+    "color": "#42f5a7"
+  },
+  {
+    "id": 5,
+    "title": "Sprint Planning",
+    "date": "2025-04-01",
+    "startTime": "09:00",
+    "endTime": "11:00",
+    "color": "#f542f5"
+  },
+  {
+    "id": 6,
+    "title": "Client Meeting",
+    "date": "2025-04-03",
+    "startTime": "13:00",
+    "endTime": "14:30",
+    "color": "#42a1f5"
+  },
+  {
+    "id": 7,
+    "title": "Product Demo",
+    "date": "2025-04-15",
+    "startTime": "15:00",
+    "endTime": "16:30",
+    "color": "#f54242"
+  },
+  {
+    "id": 8,
+    "title": "Team Building",
+    "date": "2025-04-22",
+    "startTime": "10:00",
+    "endTime": "17:00",
+    "color": "#42f578"
+  },
+  {
+    "id": 9,
+    "title": "Code Review",
+    "date": "2025-04-15",
+    "startTime": "15:30",
+    "endTime": "17:00",
+    "color": "#f59342"
+  },
+  {
+    "id": 10,
+    "title": "Architecture Discussion",
+    "date": "2025-04-15",
+    "startTime": "14:00",
+    "endTime": "15:30",
+    "color": "#42f5d9"
+  },
+  {
+    "id": 11,
+    "title": "Sprint Retrospective",
+    "date": "2025-04-22",
+    "startTime": "11:00",
+    "endTime": "13:00",
+    "color": "#f542a1"
+  },
+  {
+    "id": 12,
+    "title": "Lunch & Learn",
+    "date": "2025-04-22",
+    "startTime": "12:30",
+    "endTime": "14:00",
+    "color": "#42f5b3"
+  }
+]
