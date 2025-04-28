@@ -1,46 +1,20 @@
 import { useState } from 'react';
-import { FaCalendar, FaClock, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapMarkerAlt, FaEdit } from 'react-icons/fa';
+import { loadEventsFromStorage, saveEventsToFile } from '../utils/eventUtils';
 
 const Events = () => {
   const [sortBy, setSortBy] = useState('date'); // 'date' or 'category'
-  const [events] = useState([
-    {
-      id: 1,
-      title: 'Summer Music Festival',
-      date: '2024-07-15',
-      time: '14:00',
-      location: 'Central Park',
-      description: 'Annual summer music festival featuring local artists',
-      category: 'Music',
-    },
-    {
-      id: 2,
-      title: 'Tech Conference 2024',
-      date: '2024-03-20',
-      time: '09:00',
-      location: 'Convention Center',
-      description: 'Latest trends in technology and innovation',
-      category: 'Technology',
-    },
-    {
-      id: 3,
-      title: 'Community Cleanup',
-      date: '2023-12-10',
-      time: '08:00',
-      location: 'City Beach',
-      description: 'Join us in keeping our beaches clean',
-      category: 'Community',
-    },
-    {
-      id: 4,
-      title: 'Winter Art Exhibition',
-      date: '2023-11-25',
-      time: '10:00',
-      location: 'Art Gallery',
-      description: 'Showcasing local artists winter collections',
-      category: 'Art',
-    },
-  ]);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [isAddingEvent, setIsAddingEvent] = useState(false);
+  const [events, setEvents] = useState(() => loadEventsFromStorage().map(event => ({
+    id: event.id,
+    title: event.title,
+    date: event.date,
+    time: event.startTime,
+    location: 'Event Location',
+    description: event.title,
+    category: 'Event',
+  })));
 
   const today = new Date();
   const sortEvents = (eventList) => {
@@ -59,12 +33,144 @@ const Events = () => {
     events.filter(event => new Date(event.date) < today)
   ).reverse();
 
+  const handleSaveEvent = async (updatedEvent) => {
+    let newEvents;
+    if (updatedEvent.id) {
+      newEvents = events.map(event => event.id === updatedEvent.id ? updatedEvent : event);
+    } else {
+      const newEvent = {
+        ...updatedEvent,
+        id: Date.now().toString(),
+      };
+      newEvents = [...events, newEvent];
+    }
+    setEvents(newEvents);
+    await saveEventsToFile(newEvents.map(event => ({
+      id: event.id,
+      title: event.title,
+      date: event.date,
+      startTime: event.time,
+      endTime: event.time,
+      color: '#4287f5'
+    })));
+    setEditingEvent(null);
+  };
+
+  const EventEditModal = ({ event, onSave, onClose }) => {
+    const [formData, setFormData] = useState(event);
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      onSave(formData);
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4">{editingEvent ? 'Edit Event' : 'Add Event'}</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Title</label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Date</label>
+              <input
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Time</label>
+              <input
+                type="time"
+                value={formData.time}
+                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Location</label>
+              <input
+                type="text"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                rows="3"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              >
+                <option value="Music">Music</option>
+                <option value="Technology">Technology</option>
+                <option value="Community">Community</option>
+                <option value="Art">Art</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  setIsAddingEvent(false);
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   const EventCard = ({ event }) => {
     const isUpcoming = new Date(event.date) >= today;
     return (
       <div className={`bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 ${isUpcoming ? 'border-l-4 border-blue-500' : 'border-l-4 border-gray-300'}`}>
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">{event.title}</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-xl font-semibold text-gray-800">{event.title}</h3>
+            <button
+              onClick={() => setEditingEvent(event)}
+              className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+            >
+              <FaEdit className="w-4 h-4" />
+            </button>
+          </div>
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${
             {
               'Music': 'bg-purple-100 text-purple-800',
@@ -99,22 +205,29 @@ const Events = () => {
       </div>
     );
   };
-//   );
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Events</h1>
         <div className="flex items-center space-x-4">
-          <label className="text-sm text-gray-600">Sort by:</label>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="border rounded-md py-1 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <button
+            onClick={() => setIsAddingEvent(true)}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
           >
-            <option value="date">Date</option>
-            <option value="category">Category</option>
-          </select>
+            Add Event
+          </button>
+          <div className="flex items-center space-x-4">
+            <label className="text-sm text-gray-600">Sort by:</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="border rounded-md py-1 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="date">Date</option>
+              <option value="category">Category</option>
+            </select>
+          </div>
         </div>
       </div>
       
@@ -135,6 +248,24 @@ const Events = () => {
           <p className="text-gray-500">No past events</p>
         )}
       </div>
+      {(editingEvent || isAddingEvent) && (
+        <EventEditModal
+          event={editingEvent || {
+            id: '',
+            title: '',
+            date: new Date().toISOString().split('T')[0],
+            time: '',
+            location: '',
+            description: '',
+            category: 'Music'
+          }}
+          onSave={handleSaveEvent}
+          onClose={() => {
+            setEditingEvent(null);
+            setIsAddingEvent(false);
+          }}
+        />
+      )}
     </div>
   );
 };

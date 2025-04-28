@@ -17,7 +17,7 @@ const Navbar = () => {
   return (
     <div className="h-screen lg:w-64 flex-shrink-0">
       {/* Sidebar */}
-      <div className={`fixed lg:static lg:translate-x-0 inset-y-0 left-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-200 ease-in-out bg-white shadow-lg w-64 h-full space-y-6 py-7 px-2 z-30`}>
+      <div className={`fixed lg:translate-x-0 inset-y-0 left-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-200 ease-in-out bg-white shadow-lg w-64 h-full space-y-6 py-7 px-2 z-30`}>
         <div className="flex items-center justify-between px-4">
           <span className="text-2xl font-semibold">Sparrow</span>
           <button onClick={() => setIsOpen(false)} className="lg:hidden">
