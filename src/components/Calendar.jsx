@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
 import { FaTrash } from 'react-icons/fa';
 import { loadEventsFromStorage } from '../utils/eventUtils';

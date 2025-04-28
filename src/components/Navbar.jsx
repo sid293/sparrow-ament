@@ -16,10 +16,9 @@ const Navbar = () => {
 
   return (
     <div className="h-screen lg:w-64 flex-shrink-0">
-      {/* Sidebar */}
       <div className={`fixed lg:translate-x-0 inset-y-0 left-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-200 ease-in-out bg-white shadow-lg w-64 h-full space-y-6 py-7 px-2 z-30`}>
         <div className="flex items-center justify-between px-4">
-          <span className="text-2xl font-semibold">Sparrow</span>
+          <span className="text-2xl font-semibold">Calandar</span>
           <button onClick={() => setIsOpen(false)} className="lg:hidden">
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -52,7 +51,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu button */}
       <div className="lg:hidden fixed top-4 left-4 z-20">
         <button
           onClick={() => setIsOpen(true)}
@@ -64,9 +62,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 p-6 lg:p-8">
-        {/* Your page content goes here */}
       </div>
     </div>
   );

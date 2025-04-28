@@ -3,9 +3,8 @@ import { useLocation } from 'react-router-dom';
 
 const BreadcrumbNav = () => {
   const location = useLocation();
-  let currentPage = 'Home'; // Default page name
+  let currentPage = 'Home'; 
 
-  // Determine page name based on the path
   switch (location.pathname) {
     case '/':
       currentPage = 'Home';
@@ -26,7 +25,6 @@ const BreadcrumbNav = () => {
       currentPage = 'People';
       break;
     default:
-      // Handle potential unknown paths or dynamic routes if needed
       currentPage = 'Page';
   }
 
